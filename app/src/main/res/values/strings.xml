@@ -11,5 +11,13 @@
     <string name="settings_description">Set up, edit, or delete your user profile.</string>
     <string name="legal_info">Legal Info</string>
     <string name="play_services_not_installed">Google Play services is not installed</string>
+    <string name="flat">Flat</string>
+    <string name="rotation">Rotation:</string>
+    <string name="clear_map">Clear</string>
+    <string name="reset_map">Reset</string>
+    <string name="custom_info_contents">Custom info contents</string>
+    <string name="custom_info_window">Custom info window</string>
+    <string name="default_info_window">Default info window</string>
+    <string name="map_not_ready">Map is not ready yet</string>
 
 </resources>
