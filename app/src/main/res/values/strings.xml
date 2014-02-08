@@ -2,7 +2,14 @@
 <resources>
 
     <string name="app_name">KitchenCred</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_feature_view">FeatureView</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="grocery_map_label">Get Started!</string>
+    <string name="grocery_map_description">View a map of local sources of healthy foods to begin your quest for better health!</string>
+    <string name="settings_label">Settings</string>
+    <string name="settings_description">Set up, edit, or delete your user profile.</string>
+    <string name="legal_info">Legal Info</string>
+    <string name="play_services_not_installed">Google Play services is not installed</string>
 
 </resources>
