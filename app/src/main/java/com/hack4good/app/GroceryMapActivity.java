@@ -1,23 +1,15 @@
 package com.hack4good.app;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -34,13 +26,10 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by Sasha on 2/8/14.
@@ -48,13 +37,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class GroceryMapActivity extends FragmentActivity
         implements
         OnMarkerClickListener,
-        OnInfoWindowClickListener,
-        OnMarkerDragListener,
-        SeekBar.OnSeekBarChangeListener {
+        OnInfoWindowClickListener {
 
     /** Demonstrates customizing the info window and/or its contents. */
     class CustomInfoWindowAdapter implements InfoWindowAdapter {
-        private final RadioGroup mOptions;
 
         // These a both viewgroups containing an ImageView with id "badge" and two TextViews with id
         // "title" and "snippet".
@@ -64,25 +50,16 @@ public class GroceryMapActivity extends FragmentActivity
         CustomInfoWindowAdapter() {
             mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
             mContents = getLayoutInflater().inflate(R.layout.custom_info_contents, null);
-            mOptions = (RadioGroup) findViewById(R.id.custom_info_window_options);
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
-            if (mOptions.getCheckedRadioButtonId() != R.id.custom_info_window) {
-                // This means that getInfoContents will be called.
-                return null;
-            }
             render(marker, mWindow);
             return mWindow;
         }
 
         @Override
         public View getInfoContents(Marker marker) {
-            if (mOptions.getCheckedRadioButtonId() != R.id.custom_info_contents) {
-                // This means that the default info contents will be used.
-                return null;
-            }
             render(marker, mContents);
             return mContents;
         }
@@ -119,26 +96,10 @@ public class GroceryMapActivity extends FragmentActivity
 
     private LatLngBounds mBounds;
 
-    private final List<Marker> mMarkerRainbow = new ArrayList<Marker>();
-
-    private TextView mTopText;
-    private SeekBar mRotationBar;
-    private CheckBox mFlatBox;
-
-    private final Random mRandom = new Random();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.marker);
-
-        mTopText = (TextView) findViewById(R.id.top_text);
-
-        mRotationBar = (SeekBar) findViewById(R.id.rotationSeekBar);
-        mRotationBar.setMax(360);
-        mRotationBar.setOnSeekBarChangeListener(this);
-
-        mFlatBox = (CheckBox) findViewById(R.id.flat);
 
         setUpMapIfNeeded();
     }
@@ -178,7 +139,6 @@ public class GroceryMapActivity extends FragmentActivity
         // Set listeners for marker events.  See the bottom of this class for their behavior.
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
-        mMap.setOnMarkerDragListener(this);
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -193,12 +153,11 @@ public class GroceryMapActivity extends FragmentActivity
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, true);
         Location myLocation = locationManager.getLastKnownLocation(provider);
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         double latitude = myLocation.getLatitude();
         double longitude = myLocation.getLongitude();
         LatLng latLng = new LatLng(latitude, longitude);
         mMap.moveCamera(CameraUpdateFactory.zoomTo(20));
-        mMap.addMarker(new MarkerOptions().position(latLng)).setTitle("You");
     }
 
     private void addMarkersToMap(LatLngBounds bounds) {
@@ -256,38 +215,6 @@ public class GroceryMapActivity extends FragmentActivity
         addMarkersToMap(mBounds);
     }
 
-    /** Called when the Reset button is clicked. */
-    public void onToggleFlat(View view) {
-        if (!checkReady()) {
-            return;
-        }
-        boolean flat = mFlatBox.isChecked();
-        for (Marker marker : mMarkerRainbow) {
-            marker.setFlat(flat);
-        }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (!checkReady()) {
-            return;
-        }
-        float rotation = seekBar.getProgress();
-        for (Marker marker : mMarkerRainbow) {
-            marker.setRotation(rotation);
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        // Do nothing.
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        // Do nothing.
-    }
-
     //
     // Marker related listeners.
     //
@@ -305,18 +232,4 @@ public class GroceryMapActivity extends FragmentActivity
         Toast.makeText(getBaseContext(), "Click Info Window", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onMarkerDragStart(Marker marker) {
-        mTopText.setText("onMarkerDragStart");
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        mTopText.setText("onMarkerDragEnd");
-    }
-
-    @Override
-    public void onMarkerDrag(Marker marker) {
-        mTopText.setText("onMarkerDrag.  Current Position: " + marker.getPosition());
-    }
 }

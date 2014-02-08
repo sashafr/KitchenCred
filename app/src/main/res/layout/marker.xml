@@ -3,32 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <TextView
-        android:id="@+id/top_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:lines="2"
-        android:text="@string/grocery_map_label"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        <CheckBox
-            android:id="@+id/flat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/flat"
-            android:textSize="14sp"
-            android:onClick="onToggleFlat" />
-        <TextView
-            android:layout_marginLeft="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rotation" />
-        <SeekBar
-            android:id="@+id/rotationSeekBar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -60,27 +34,6 @@
                     android:onClick="onResetMap"
                     android:text="@string/reset_map"/>
             </LinearLayout>
-            <RadioGroup
-                android:id="@+id/custom_info_window_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/default_info_window"
-                    android:checked="true"
-                    android:text="@string/default_info_window"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/custom_info_contents"
-                    android:text="@string/custom_info_contents"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/custom_info_window"
-                    android:text="@string/custom_info_window"/>
-            </RadioGroup>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
