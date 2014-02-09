@@ -288,29 +288,23 @@ public class GroceryMapActivity extends FragmentActivity
     private class MapData extends AsyncTask <String,String,String> {
 
         public String url = "";
-        public float ne_lon = 0.00f;
-        public float ne_lat = 0.00f;
-        public float sw_lon = 0.00f;
-        public float sw_lat = 0.00f;
+        private double ne_lon = 0.00;
+        private double  ne_lat = 0.00;
+        private double sw_lon = 0.00;
+        private double sw_lat = 0.00;
         private ProgressDialog progDialog = null;
-        public String json = null;
+        public String json = "";
 
 
         /* set coordinates for map data */
         public void setCoordinates(LatLngBounds bounds) {
-
             if (bounds.northeast != null) {
-
-                String ne = bounds.northeast.toString();
-                String[] arrNE = ne.split(";");
-                ne_lon = Float.parseFloat(arrNE[0]);
-                ne_lat = Float.parseFloat(arrNE[1]);
-            } else if (bounds.southwest != null) {
-
-                String sw = bounds.southwest.toString();
-                String[] arrSW = sw.split(";");
-                sw_lon = Float.parseFloat(arrSW[0]);
-                sw_lat = Float.parseFloat(arrSW[1]);
+                ne_lon = bounds.northeast.longitude;
+                ne_lat = bounds.northeast.latitude;
+            }
+            if (bounds.southwest != null) {
+                sw_lon = bounds.southwest.longitude;
+                sw_lat = bounds.southwest.latitude;
             }
         }
 
@@ -319,6 +313,9 @@ public class GroceryMapActivity extends FragmentActivity
             // build URL for HTTP request
             String strJSON = "";
             url = getString(R.string.db_url) + getString(R.string.get_location) ;
+            url = url.replace("%3A", ":");
+            url = url.replace("%2F", "/");
+            url = url.replace("%3", "?");
             url += "ne=" + ne_lon + ";" + ne_lat + "&sw=" + sw_lon + ";" + sw_lat;
 
             // make request
@@ -349,11 +346,13 @@ public class GroceryMapActivity extends FragmentActivity
                     sb.append(line + "\n");
                 }
                 stream.close();
+                /* TODO isolate body text */
                 strJSON = sb.toString();
             } catch (Exception e) {
                 Log.e("Buffer", "Error converting result " + e.toString());
             }
 
+            json = strJSON;
             return strJSON;
         }
 
