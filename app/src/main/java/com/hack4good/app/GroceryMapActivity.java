@@ -220,22 +220,6 @@ public class GroceryMapActivity extends FragmentActivity
         dataClient.setCoordinates(bounds);
         dataClient.execute();
 
-        // ready to go!!
-        try {
-            JSONArray arrData = new JSONArray(dataClient.json);
-            JSONObject obj;
-
-            for (int i = 0; i < arrData.length(); i++) {
-                obj = arrData.getJSONObject(i);
-                Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(obj.getDouble("lat"), obj.getDouble("lon")))
-                    .title(obj.getString("title"))
-                );
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
 //        // Uses a colored icon.
 //        mBrisbane = mMap.addMarker(new MarkerOptions()
 //                .position(BRISBANE)
@@ -325,9 +309,12 @@ public class GroceryMapActivity extends FragmentActivity
             // build URL for HTTP request
             String strJSON = "";
             url = getString(R.string.db_url) + getString(R.string.get_location) ;
+            // clean up string
+
             url = url.replace("%3A", ":");
             url = url.replace("%2F", "/");
             url = url.replace("%3", "?");
+
             url += "ne=" + ne_lon + ";" + ne_lat + "&sw=" + sw_lon + ";" + sw_lat;
 
             // make request
@@ -337,8 +324,8 @@ public class GroceryMapActivity extends FragmentActivity
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(url);
                 HttpResponse httpResponse = httpClient.execute(httpPost);
-                HttpEntity httpEntity = httpResponse.getEntity();
-                stream = httpEntity.getContent();
+
+                stream = httpResponse.getEntity().getContent();
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -358,8 +345,13 @@ public class GroceryMapActivity extends FragmentActivity
                     sb.append(line + "\n");
                 }
                 stream.close();
-                /* TODO isolate body text */
+
+                /* isolate JSON blob */
                 strJSON = sb.toString();
+                strJSON = sb.substring(strJSON.indexOf("<body>") + "<body>".length() , strJSON.indexOf("</body>"));
+                strJSON = strJSON.replace("\t", "");
+                strJSON = strJSON.replace("\n", "");
+
             } catch (Exception e) {
                 Log.e("Buffer", "Error converting result " + e.toString());
             }
@@ -371,17 +363,28 @@ public class GroceryMapActivity extends FragmentActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // progDialog = new ProgressDialog(mWindow.this);
-            //progDialog.setMessage("Getting Data ...");
-            //progDialog.setIndeterminate(false);
-            //progDialog.setCancelable(true);
-            //progDialog.show();
         }
 
         @Override
         protected void onPostExecute(String o) {
             super.onPostExecute(o);
             json = o;
+            // ready to go!!
+            try {
+                JSONArray arrData = new JSONArray(json);
+                JSONObject obj;
+
+                // generate map markers from JSON
+                for (int i = 0; i < arrData.length(); i++) {
+                    obj = arrData.getJSONObject(i);
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(obj.getDouble("lat"), obj.getDouble("lon")))
+                            .title(obj.getString("title"))
+                    );
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
