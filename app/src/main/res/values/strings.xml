@@ -19,5 +19,7 @@
     <string name="custom_info_window">Custom info window</string>
     <string name="default_info_window">Default info window</string>
     <string name="map_not_ready">Map is not ready yet</string>
+    <string name="db_url">http%3A%2F%2Fec2-54-235-14-252.compute-1.amazonaws.com%2F</string>
+    <string name="get_location">getLocations.php%3</string>
 
 </resources>

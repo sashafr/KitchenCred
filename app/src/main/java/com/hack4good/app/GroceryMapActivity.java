@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.LocationManager;
@@ -40,6 +41,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -67,8 +69,8 @@ public class GroceryMapActivity extends FragmentActivity
         private final View mContents;
 
         CustomInfoWindowAdapter() {
-            mWindow = getLayoutInflater().inflate(android.R.layout.custom_info_window, null);
-            mContents = getLayoutInflater().inflate(android.R.layout.custom_info_contents, null);
+            mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+            mContents = getLayoutInflater().inflate(R.layout.custom_info_contents, null);
         }
 
         @Override
@@ -199,8 +201,8 @@ public class GroceryMapActivity extends FragmentActivity
 
     private void addMarkersToMap(LatLngBounds bounds) {
 
-        LatLng coordNE = bounds.northeast;
-        LatLng coordSW = bounds.southwest;
+        //LatLng coordNE = bounds.northeast;
+        //LatLng coordSW = bounds.southwest;
 
         MapData dataClient = new MapData();
         dataClient.setCoordinates(bounds);
@@ -209,10 +211,18 @@ public class GroceryMapActivity extends FragmentActivity
         // ready to go!!
         try {
             JSONArray arrData = new JSONArray(dataClient.json);
+            JSONObject obj;
+
+            for (int i = 0; i < arrData.length(); i++) {
+                obj = arrData.getJSONObject(i);
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(obj.getDouble("lat"), obj.getDouble("lon")))
+                    .title(obj.getString("title"))
+                );
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
 //        // Uses a colored icon.
 //        mBrisbane = mMap.addMarker(new MarkerOptions()
@@ -220,7 +230,7 @@ public class GroceryMapActivity extends FragmentActivity
 //                .title("Brisbane")
 //                .snippet("Population: 2,074,200")
 //                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
+//
 //        // Uses a custom icon with the info window popping out of the center of the icon.
 //        mSydney = mMap.addMarker(new MarkerOptions()
 //                .position(SYDNEY)
@@ -308,7 +318,7 @@ public class GroceryMapActivity extends FragmentActivity
         protected String doInBackground(String... objects) {
             // build URL for HTTP request
             String strJSON = "";
-            url = "http://ec2-54-235-14-252.compute-1.amazonaws.com/getLocations.php?";
+            url = getString(R.string.db_url) + getString(R.string.get_location) ;
             url += "ne=" + ne_lon + ";" + ne_lat + "&sw=" + sw_lon + ";" + sw_lat;
 
             // make request

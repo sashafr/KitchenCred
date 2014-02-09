@@ -1,12 +1,5 @@
 package com.hack4good.app;
 
-<<<<<<< HEAD
-/**
- * Created by Sasha on 2/8/14.
- */
-public class RegisterActivity {
-}
-=======
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.app.Activity;
@@ -50,4 +43,3 @@ public class RegisterActivity extends FragmentActivity{
 
     }
 }
->>>>>>> 7c91a9d099cc983c98cf24b9d32a39ef878f7da9

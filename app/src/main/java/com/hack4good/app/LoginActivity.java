@@ -1,5 +1,8 @@
 package com.hack4good.app;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 import android.app.Activity;
 import android.content.Intent;
@@ -51,11 +54,16 @@ public class LoginActivity extends FragmentActivity{
 
                 //TODO need to get user password and salt from db
 
-                String storedPw = "";
+                String storedPw = "test";
                 byte[] salt = "".getBytes();
-
+                String newPw = "";
                 try {
-                    if(getHashWithSalt(pw, salt).toString().equals(storedPw)) {
+                    newPw = new String(getHashWithSalt(pw, salt));
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+
+                    if(newPw.equals(storedPw)) {
                         Intent i = new Intent(getApplicationContext(), GroceryMapActivity.class);
                         startActivity(i);
                     } else {
@@ -66,7 +74,7 @@ public class LoginActivity extends FragmentActivity{
 
                         // set dialog message
                         alertDialogBuilder
-                                .setMessage("Incorrect Password")
+                                .setMessage(newPw)
                                 .setCancelable(false)
                                 .setPositiveButton("Retry",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
@@ -85,9 +93,7 @@ public class LoginActivity extends FragmentActivity{
                         // show it
                         alertDialog.show();
                     }
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
     }
