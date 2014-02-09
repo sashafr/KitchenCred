@@ -1,8 +1,5 @@
 package com.hack4good.app;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 import android.app.Activity;
 import android.content.Intent;

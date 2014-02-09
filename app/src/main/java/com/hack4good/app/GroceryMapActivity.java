@@ -1,19 +1,34 @@
 package com.hack4good.app;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +40,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Sasha on 2/8/14.
@@ -43,8 +67,8 @@ public class GroceryMapActivity extends FragmentActivity
         private final View mContents;
 
         CustomInfoWindowAdapter() {
-            mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
-            mContents = getLayoutInflater().inflate(R.layout.custom_info_contents, null);
+            mWindow = getLayoutInflater().inflate(android.R.layout.custom_info_window, null);
+            mContents = getLayoutInflater().inflate(android.R.layout.custom_info_contents, null);
         }
 
         @Override
@@ -175,14 +199,20 @@ public class GroceryMapActivity extends FragmentActivity
 
     private void addMarkersToMap(LatLngBounds bounds) {
 
-/////////    ///////////        ///////////       //         //
-//           //       //        //        //       //      //
-//           //       //        //         //       //   //
-//           //       //        //         //        ////
-//           //       ///       //         //         //
-//           //       //        //       //           //
-//           //       //        //     //             //
-/////////    ///////////        ////////              //
+        LatLng coordNE = bounds.northeast;
+        LatLng coordSW = bounds.southwest;
+
+        MapData dataClient = new MapData();
+        dataClient.setCoordinates(bounds);
+        dataClient.execute();
+
+        // ready to go!!
+        try {
+            JSONArray arrData = new JSONArray(dataClient.json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
 //        // Uses a colored icon.
 //        mBrisbane = mMap.addMarker(new MarkerOptions()
@@ -243,6 +273,95 @@ public class GroceryMapActivity extends FragmentActivity
     @Override
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(getBaseContext(), "Click Info Window", Toast.LENGTH_SHORT).show();
+    }
+
+    private class MapData extends AsyncTask <String,String,String> {
+
+        public String url = "";
+        public float ne_lon = 0.00f;
+        public float ne_lat = 0.00f;
+        public float sw_lon = 0.00f;
+        public float sw_lat = 0.00f;
+        private ProgressDialog progDialog = null;
+        public String json = null;
+
+
+        /* set coordinates for map data */
+        public void setCoordinates(LatLngBounds bounds) {
+
+            if (bounds.northeast != null) {
+
+                String ne = bounds.northeast.toString();
+                String[] arrNE = ne.split(";");
+                ne_lon = Float.parseFloat(arrNE[0]);
+                ne_lat = Float.parseFloat(arrNE[1]);
+            } else if (bounds.southwest != null) {
+
+                String sw = bounds.southwest.toString();
+                String[] arrSW = sw.split(";");
+                sw_lon = Float.parseFloat(arrSW[0]);
+                sw_lat = Float.parseFloat(arrSW[1]);
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... objects) {
+            // build URL for HTTP request
+            String strJSON = "";
+            url = "http://ec2-54-235-14-252.compute-1.amazonaws.com/getLocations.php?";
+            url += "ne=" + ne_lon + ";" + ne_lat + "&sw=" + sw_lon + ";" + sw_lat;
+
+            // make request
+            InputStream stream = null;
+            try {
+
+                DefaultHttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost(url);
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                stream = httpEntity.getContent();
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                // parse response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "iso-8859-1"), 8);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                // build json string
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                stream.close();
+                strJSON = sb.toString();
+            } catch (Exception e) {
+                Log.e("Buffer", "Error converting result " + e.toString());
+            }
+
+            return strJSON;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // progDialog = new ProgressDialog(mWindow.this);
+            //progDialog.setMessage("Getting Data ...");
+            //progDialog.setIndeterminate(false);
+            //progDialog.setCancelable(true);
+            //progDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(String o) {
+            super.onPostExecute(o);
+            json = o;
+        }
     }
 
 }
