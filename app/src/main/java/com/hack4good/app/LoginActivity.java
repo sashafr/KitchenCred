@@ -55,13 +55,20 @@ public class LoginActivity extends FragmentActivity{
                 EditText pwEdt = (EditText) findViewById(R.id.login_pw);
                 String pw = pwEdt.getText().toString();
 
-                //TODO need to get user password from db
+                //TODO need to get password, name, total score
+                //make sure to test that something is actually returned for stored pw because empty string will crash app
+                //must have format X:X:X
 
-                String storedPw = "";
+                String name = "";
+                int score = 0;
+                String storedPw = "1000:09d6765a6ed0c86bf0003fee87d94e232312940d31db86eb:24772a287be80573c012f661641d0c65e174b4e77b083964";
 
                 try {
-                    if(PasswordHash.validatePassword(pw, storedPw)) {
+                    if(!pw.equals("") && PasswordHash.validatePassword(pw, storedPw)) {
                         Intent i = new Intent(getApplicationContext(), GroceryMapActivity.class);
+                        i.putExtra("USERNAME", name);
+                        i.putExtra("TOTAL_SCORE", score);
+                        i.putExtra("USER_EMAIL", email);
                         startActivity(i);
                     } else {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -69,9 +76,11 @@ public class LoginActivity extends FragmentActivity{
                         // set title
                         alertDialogBuilder.setTitle("Authentication Failed");
 
+                        System.out.println(PasswordHash.createHash("test"));
+
                         // set dialog message
                         alertDialogBuilder
-                                .setMessage(PasswordHash.createHash("test"))
+                                .setMessage("Incorrect Password")
                                 .setCancelable(false)
                                 .setPositiveButton("Retry",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
@@ -95,7 +104,6 @@ public class LoginActivity extends FragmentActivity{
                 } catch (InvalidKeySpecException e) {
                     e.printStackTrace();
                 }
-
             }
         });
     }
