@@ -15,6 +15,9 @@ import android.widget.TextView;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+
+import com.hack4good.app.PasswordHash;
 
 /**
  * Created by Sasha on 2/8/14.
@@ -52,18 +55,12 @@ public class LoginActivity extends FragmentActivity{
                 EditText pwEdt = (EditText) findViewById(R.id.login_pw);
                 String pw = pwEdt.getText().toString();
 
-                //TODO need to get user password and salt from db
+                //TODO need to get user password from db
 
-                String storedPw = "test";
-                byte[] salt = "".getBytes();
-                String newPw = "";
+                String storedPw = "";
+
                 try {
-                    newPw = new String(getHashWithSalt(pw, salt));
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-
-                    if(newPw.equals(storedPw)) {
+                    if(PasswordHash.validatePassword(pw, storedPw)) {
                         Intent i = new Intent(getApplicationContext(), GroceryMapActivity.class);
                         startActivity(i);
                     } else {
@@ -74,15 +71,15 @@ public class LoginActivity extends FragmentActivity{
 
                         // set dialog message
                         alertDialogBuilder
-                                .setMessage(newPw)
+                                .setMessage(PasswordHash.createHash("test"))
                                 .setCancelable(false)
                                 .setPositiveButton("Retry",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
                                         dialog.cancel();
                                     }
                                 })
-                                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         LoginActivity.this.finish();
                                     }
                                 });
@@ -93,23 +90,13 @@ public class LoginActivity extends FragmentActivity{
                         // show it
                         alertDialog.show();
                     }
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeySpecException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
-    }
-
-    public byte[] generateSalt() {
-        SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[16];
-        random.nextBytes(bytes);
-        return bytes;
-    }
-
-    public byte[] getHashWithSalt(String input, byte[] salt) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-1");
-        digest.reset();
-        digest.update(salt);
-        byte[] hashedBytes = digest.digest(input.getBytes());
-        return hashedBytes;
     }
 }
