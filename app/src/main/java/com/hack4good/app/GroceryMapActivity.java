@@ -1,11 +1,9 @@
 package com.hack4good.app;
 
-<<<<<<< HEAD
 import android.app.Activity;
 import android.app.ProgressDialog;
-=======
+
 import android.content.Intent;
->>>>>>> 7c91a9d099cc983c98cf24b9d32a39ef878f7da9
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.LocationManager;
@@ -15,17 +13,14 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-<<<<<<< HEAD
 import android.util.Log;
-=======
+
 import android.view.Menu;
 import android.view.MenuItem;
->>>>>>> 7c91a9d099cc983c98cf24b9d32a39ef878f7da9
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-=======
->>>>>>> 7c91a9d099cc983c98cf24b9d32a39ef878f7da9
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
