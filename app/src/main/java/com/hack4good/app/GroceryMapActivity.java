@@ -39,6 +39,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -201,8 +202,8 @@ public class GroceryMapActivity extends FragmentActivity
         TextView tv = new TextView(this);
         tv.setTextSize(40);
         tv.setTypeface(Typeface.DEFAULT_BOLD);
-        tv.setShadowLayer(8, 0, 0, Color.BLUE);
-        tv.setTextColor(Color.BLUE);
+        tv.setShadowLayer(8, 0, 0, Color.GREEN);
+        tv.setTextColor(Color.GREEN);
         tv.setLayoutParams(lparams);
         tv.setText(score);
         LinearLayout ll = (LinearLayout) this.findViewById(R.id.score_box);
