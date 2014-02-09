@@ -1,7 +1,11 @@
 package com.hack4good.app;
 
+<<<<<<< HEAD
 import android.app.Activity;
 import android.app.ProgressDialog;
+=======
+import android.content.Intent;
+>>>>>>> 7c91a9d099cc983c98cf24b9d32a39ef878f7da9
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.LocationManager;
@@ -11,14 +15,17 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+<<<<<<< HEAD
 import android.util.Log;
+=======
+import android.view.Menu;
+import android.view.MenuItem;
+>>>>>>> 7c91a9d099cc983c98cf24b9d32a39ef878f7da9
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.RadioGroup;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+=======
+>>>>>>> 7c91a9d099cc983c98cf24b9d32a39ef878f7da9
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -108,6 +116,23 @@ public class GroceryMapActivity extends FragmentActivity
 
             //TODO add link to edit info for a location
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.menu_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private GoogleMap mMap;
