@@ -23,15 +23,6 @@ android:fillViewport="true">
         <!-- Logo Ends -->
     </LinearLayout>
     <!--  Header Ends -->
-    <!-- Footer Start -->
-    <LinearLayout android:id="@+id/footer"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="90dip"
-        android:background="@layout/header_gradient"
-        android:layout_alignParentBottom="true">
-    </LinearLayout>
-    <!-- Footer Ends -->
 
     <!-- Registration Form -->
     <LinearLayout
@@ -86,7 +77,7 @@ android:fillViewport="true">
             android:layout_height="wrap_content"
             android:layout_marginTop="40dip"
             android:layout_marginBottom="40dip"
-            android:text="Already have an account! Login here"
+            android:text="I Already Have an Account"
             android:gravity="center"
             android:textSize="20dip"
             android:textColor="#025f7c"/>
