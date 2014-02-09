@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.location.Location;
@@ -192,11 +193,20 @@ public class GroceryMapActivity extends FragmentActivity
             }
         });
 
-//        LayoutInflater inflater = LayoutInflater.from(this);
-//        View innerView = inflater.inflate(R.id.score_box, null);
-//        TextView tv = (TextView) innerView.findViewById(R.id.score_text);
-//        Intent intent = getIntent();
-//        tv.setText(intent.getIntExtra("SCORE", 0));
+        Intent intent = getIntent();
+        String score = Integer.toString(intent.getIntExtra("SCORE", 0));
+
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView tv = new TextView(this);
+        tv.setTextSize(40);
+        tv.setTypeface(Typeface.DEFAULT_BOLD);
+        tv.setShadowLayer(8, 0, 0, Color.BLUE);
+        tv.setTextColor(Color.BLUE);
+        tv.setLayoutParams(lparams);
+        tv.setText(score);
+        LinearLayout ll = (LinearLayout) this.findViewById(R.id.score_box);
+        ll.addView(tv);
 
         mMap.setMyLocationEnabled(true);
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
