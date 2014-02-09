@@ -73,7 +73,7 @@ public class FullscreenActivity extends ListActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        if (item.getItemId() == R.id.menu_legal) {
+        if (item.getItemId() == R.id.menu_settings) {
             startActivity(new Intent(this, LegalInfoActivity.class));
             return true;
         }
