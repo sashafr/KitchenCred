@@ -60,7 +60,7 @@ public class LoginActivity extends FragmentActivity{
                 //must have format X:X:X
 
                 String name = "";
-                int score = 0;
+                int score = 50;
                 String storedPw = "1000:09d6765a6ed0c86bf0003fee87d94e232312940d31db86eb:24772a287be80573c012f661641d0c65e174b4e77b083964";
 
                 try {
@@ -75,8 +75,6 @@ public class LoginActivity extends FragmentActivity{
 
                         // set title
                         alertDialogBuilder.setTitle("Authentication Failed");
-
-                        System.out.println(PasswordHash.createHash("test"));
 
                         // set dialog message
                         alertDialogBuilder

@@ -16,9 +16,11 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +53,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.content.Context;
+
 
 /**
  * Created by Sasha on 2/8/14.
@@ -59,6 +63,8 @@ public class GroceryMapActivity extends FragmentActivity
         implements
         OnMarkerClickListener,
         OnInfoWindowClickListener {
+
+    final Context context = this;
 
     /** Demonstrates customizing the info window and/or its contents. */
     class CustomInfoWindowAdapter implements InfoWindowAdapter {
@@ -185,6 +191,12 @@ public class GroceryMapActivity extends FragmentActivity
                 addMarkersToMap(mBounds);
             }
         });
+
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        View innerView = inflater.inflate(R.id.score_box, null);
+//        TextView tv = (TextView) innerView.findViewById(R.id.score_text);
+//        Intent intent = getIntent();
+//        tv.setText(intent.getIntExtra("SCORE", 0));
 
         mMap.setMyLocationEnabled(true);
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);

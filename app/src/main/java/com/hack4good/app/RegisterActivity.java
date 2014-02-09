@@ -45,40 +45,27 @@ public class RegisterActivity extends FragmentActivity{
         regButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                EditText emailEdt = (EditText) findViewById(R.id.login_email);
+                EditText nameEdt = (EditText) findViewById(R.id.reg_fullname);
+                String fullname = nameEdt.getText().toString();
+
+                EditText emailEdt = (EditText) findViewById(R.id.reg_email);
                 String email = emailEdt.getText().toString();
 
-                EditText pwEdt = (EditText) findViewById(R.id.login_pw);
+                EditText pwEdt = (EditText) findViewById(R.id.reg_password);
                 String pw = pwEdt.getText().toString();
-
-                //TODO need to get password, name, total score
-                //make sure to test that something is actually returned for stored pw because empty string will crash app
-                //must have format X:X:X
-
-                String name = "";
-                int score = 0;
-                String storedPw = "1000:09d6765a6ed0c86bf0003fee87d94e232312940d31db86eb:24772a287be80573c012f661641d0c65e174b4e77b083964";
-
                 try {
-                    if(!pw.equals("") && PasswordHash.validatePassword(pw, storedPw)) {
-                        Intent i = new Intent(getApplicationContext(), GroceryMapActivity.class);
-                        i.putExtra("USERNAME", name);
-                        i.putExtra("TOTAL_SCORE", score);
-                        i.putExtra("USER_EMAIL", email);
-                        startActivity(i);
-                    } else {
+
+                    if (email.equals("") || fullname.equals("") || pw.equals("")){
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
                         // set title
-                        alertDialogBuilder.setTitle("Authentication Failed");
-
-                        System.out.println(PasswordHash.createHash("test"));
+                        alertDialogBuilder.setTitle("Error");
 
                         // set dialog message
                         alertDialogBuilder
-                                .setMessage("Incorrect Password")
+                                .setMessage("Please complete all fields")
                                 .setCancelable(false)
-                                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
@@ -89,6 +76,49 @@ public class RegisterActivity extends FragmentActivity{
 
                         // show it
                         alertDialog.show();
+                    } else {
+
+                        String hashedPw = PasswordHash.createHash(pw);
+
+                        //TODO need to check that email isn't in db
+
+                        //TODO set to false
+                        boolean uniqueEmail = true;
+
+                        if(uniqueEmail) {
+
+                            //TODO if email is unique, insert name, email, hashedPw
+                            //make sure to test that something is actually returned for stored pw because empty string will crash app
+                            //must have format X:X:X
+
+                            Intent i = new Intent(getApplicationContext(), GroceryMapActivity.class);
+                            i.putExtra("USERNAME", fullname);
+                            i.putExtra("USER_EMAIL", email);
+                            startActivity(i);
+
+                        } else {
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+                            // set title
+                            alertDialogBuilder.setTitle("Error");
+
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setMessage("This email is already registered: " + email)
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+
+                            // create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            // show it
+                            alertDialog.show();
+                        }
+
                     }
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
